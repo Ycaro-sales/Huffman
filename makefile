@@ -1,5 +1,5 @@
 build:
-	gcc main.c -o main
+	gcc main.c -o ./bin/main
 
 clean:
 	rm -rf bin
