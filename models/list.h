@@ -4,12 +4,10 @@
 typedef struct Node {
     void *data;
     Node *next;
-    Node *prev;
 } Node;
 
 typedef struct List {
     Node *head;
-    Node *tail;
 } List;
 
 List *create_list(List *list);
