@@ -1,3 +1,4 @@
+#include "list.h"
 #include <stdbool.h>
 
 #ifndef HASHTABLE_H
@@ -8,6 +9,7 @@ typedef struct Hashtable {
     int capacity;
     int *items[HASHTABLE_SIZE];
     int (*hash_function)(unsigned char);
+    List *used_indexes;
 } Hashtable;
 
 Hashtable *create_hashtable(int(hash_function)(unsigned char), int capacity);
