@@ -1,19 +1,16 @@
-#include "hashtable.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef struct Huffman_file {
     unsigned char *buffer;
-    int file_size;
-    Hashtable *char_amounts;
+    unsigned int file_size;
 } HFile;
 
 // Função que lê os bytes do buffer e os insere na hashtable
 void read_file_bytes(HFile *file) {
     int size = file->file_size;
     for (int i = 0; i < size; i++) {
-        hash_insert(file->char_amounts, file->buffer[i]);
     }
 }
 
@@ -42,10 +39,8 @@ HFile *create_huffman_file(char *file_name) {
     // Fecha o arquivo
     fclose(stream);
 
-    // Cria uma hashtable que recebe o byte atual e retorna a quantidade de
-    // vezes que ele apareceu no arquivo
-    tmp->char_amounts = create_hashtable(default_hash, 255);
-
     // Lê os bytes do arquivo e insere na hashtable
     read_file_bytes(tmp);
+
+    return tmp;
 }

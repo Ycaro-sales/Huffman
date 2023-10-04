@@ -5,8 +5,12 @@
 
 #define HEAP_SIZE 1000
 
+typedef struct heap_node {
+    int num;
+    void *data;
+} HNode;
 typedef struct heap {
-    int items[HEAP_SIZE];
+    HNode *items[HEAP_SIZE];
     int size;
     int capacity;
 } heap;
@@ -37,21 +41,21 @@ bool has_right_child(heap *heap, int index) {
 }
 
 int left_child(heap *heap, int index) {
-    return heap->items[get_left_child_index(index)];
+    return heap->items[get_left_child_index(index)]->num;
 }
 
 int right_child(heap *heap, int index) {
-    return heap->items[get_right_child_index(index)];
+    return heap->items[get_right_child_index(index)]->num;
 }
 
-int peek(heap *heap) { return heap->items[0]; }
+int peek(heap *heap) { return heap->items[0]->num; }
 
 void heapify_up(heap *heap) {
     int index = heap->size - 1;
     while (has_parent(heap, index) &&
-           get_parent_index(index) > heap->items[index]) {
-        swap(&heap->items[get_parent_index(index)], &heap->items[index],
-             sizeof(heap->items[0]));
+           get_parent_index(index) > heap->items[index]->num) {
+        swap(&heap->items[get_parent_index(index)]->num,
+             &heap->items[index]->num, sizeof(heap->items[0]->num));
         index = get_parent_index(index);
     }
 }
@@ -66,25 +70,25 @@ void heapify_down(heap *heap) {
             right_child(heap, index) < left_child(heap, index)) {
             smaller_child_index = get_right_child_index(index);
         }
-        if (heap->items[index] < heap->items[smaller_child_index]) {
+        if (heap->items[index]->num < heap->items[smaller_child_index]->num) {
             break;
         } else {
             swap(&heap->items[index], &heap->items[smaller_child_index],
-                 sizeof(heap->items[0]));
+                 sizeof(heap->items[0]->num));
         }
         index = smaller_child_index;
     }
 }
 
-int pull(heap *heap) {
-    int item = heap->items[0];
+HNode *pull(heap *heap) {
+    HNode *item = heap->items[0];
     heap->items[0] = heap->items[heap->size - 1];
     heap->size--;
     heapify_down(heap);
     return item;
 }
 
-void add(heap *heap, int item) {
+void add(heap *heap, HNode *item) {
     heap->items[heap->size] = item;
     heap->size++;
     heapify_up(heap);
