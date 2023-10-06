@@ -1,4 +1,5 @@
 #include "list.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@ List *create_list() {
 }
 
 void list_append(List *list, void *data) {
-    Node *tmp = malloc(sizeof *tmp);
+    ListNode *tmp = malloc(sizeof *tmp);
     tmp->next = NULL;
     tmp->data = data;
 
@@ -19,7 +20,7 @@ void list_append(List *list, void *data) {
         return;
     }
 
-    Node *curr = list->head;
+    ListNode *curr = list->head;
     while (curr->next != NULL) {
         curr = curr->next;
     }
@@ -27,7 +28,7 @@ void list_append(List *list, void *data) {
     curr->next = tmp;
 }
 void list_push(List *list, void *data) {
-    Node *tmp = malloc(sizeof *tmp);
+    ListNode *tmp = malloc(sizeof *tmp);
 
     tmp->data = data;
     tmp->next = list->head;
@@ -36,7 +37,7 @@ void list_push(List *list, void *data) {
 }
 
 void list_print(List *list) {
-    Node *curr = list->head;
+    ListNode *curr = list->head;
 
     while (curr->next != NULL) {
         printf("%d", *(int *)curr->data);
@@ -45,7 +46,7 @@ void list_print(List *list) {
 }
 
 bool list_search(List *list, void *data) {
-    Node *curr = list->head;
+    ListNode *curr = list->head;
 
     do {
         if (*((int *)curr->data) == *((int *)data)) {
@@ -58,8 +59,8 @@ bool list_search(List *list, void *data) {
 }
 
 bool list_remove(List *list, void *data) {
-    Node *curr = list->head;
-    Node *tmp = NULL;
+    ListNode *curr = list->head;
+    ListNode *tmp = NULL;
 
     do {
         if (*((int *)curr->next->data) == *((int *)data)) {

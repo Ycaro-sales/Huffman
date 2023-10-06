@@ -1,22 +1,25 @@
+#include "huffman_file.h"
+#include "../models/hashtable.h"
+#include "../models/min_heap.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Huffman_file {
-    unsigned char *buffer;
-    unsigned int file_size;
-} HFile;
-
-// Função que lê os bytes do buffer e os insere na hashtable
-void read_file_bytes(HFile *file) {
+Hashtable *read_file_bytes(HFile *file) {
+    Hashtable *tmp = create_hash();
     int size = file->file_size;
+
     for (int i = 0; i < size; i++) {
+        hash_add(tmp, file->buffer[i]);
     }
+
+    return tmp;
 }
 
 HFile *create_huffman_file(char *file_name) {
     HFile *tmp = malloc(sizeof *tmp);
     FILE *stream;
+
     char *buffer;
     int file_length;
 
@@ -41,6 +44,7 @@ HFile *create_huffman_file(char *file_name) {
 
     // Lê os bytes do arquivo e insere na hashtable
     read_file_bytes(tmp);
+    tmp->char_frequency = read_file_bytes(tmp);
 
     return tmp;
 }

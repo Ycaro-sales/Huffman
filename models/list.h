@@ -1,13 +1,15 @@
+#include <stdbool.h>
+
 #ifndef LIST_H
 #define LIST_H
 
-typedef struct Node {
+typedef struct ListNode {
     void *data;
-    Node *next;
-} Node;
+    struct ListNode *next;
+} ListNode;
 
 typedef struct List {
-    Node *head;
+    ListNode *head;
 } List;
 
 List *create_list();
