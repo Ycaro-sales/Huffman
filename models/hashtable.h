@@ -2,9 +2,10 @@
 
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
+#define HASH_CAPACITY 255
 
 typedef struct hashtable {
-    int array[sizeof(unsigned char)];
+    int array[HASH_CAPACITY];
     List *used_indexes;
 } Hashtable;
 

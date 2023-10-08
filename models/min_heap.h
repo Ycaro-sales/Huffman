@@ -16,6 +16,8 @@ typedef struct heap {
 
 Heap *create_heap(int capacity);
 HeapNode *heap_pull(Heap *heap);
-void heap_add(Heap *heap, HeapNode *item);
+
+void heap_add(Heap *heap, int num, void *data);
+void heap_sort(Heap *heap);
 
 #endif // !HASHTABLE_H

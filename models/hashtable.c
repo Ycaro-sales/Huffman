@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define HASH_CAPACITY 255
+
 typedef struct hashtable {
-    int array[sizeof(unsigned char)];
+    int array[HASH_CAPACITY];
     List *used_indexes;
 } Hashtable;
 
@@ -15,9 +17,7 @@ Hashtable *create_hash() {
     return tmp;
 }
 
-int hash_function(unsigned char *data) {
-    return (int)data[0] % sizeof(unsigned char);
-}
+int hash_function(unsigned char *data) { return (int)data[0] % HASH_CAPACITY; }
 
 void hash_add(Hashtable *hashtable, unsigned char *data) {
     if (hashtable->array[hash_function(data)] == 0) {

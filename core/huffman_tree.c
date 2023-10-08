@@ -5,31 +5,34 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#define UNSIGNED_CHAR_CAPACITY 255
 
 HuffNode *create_huffman_node(unsigned char data, int frequency) {
     HuffNode *tmp = malloc(sizeof *tmp);
 
     tmp->data = data;
-    tmp->frequency = frequency;
     tmp->left = NULL;
     tmp->right = NULL;
 
     return tmp;
 }
 
-void fill_huffman_heap(Heap *huffman_tree, Hashtable *char_frequency) {
-    ListNode *curr = char_frequency->used_indexes->head;
-    HuffNode *tmp = NULL;
-    while (curr->next != NULL) {
-        tmp = create_huffman_node(curr->data);
-        heap_add(huffman_tree, );
-        curr = curr->next;
+void fill_heap_with_char_frequency(Heap *heap, Hashtable *char_frequency) {
+    for (int i = 0; i < UNSIGNED_CHAR_CAPACITY; i++) {
+        if (char_frequency->array[i] > 0) {
+            HuffNode *tmp = create_huffman_node(i, char_frequency->array[i]);
+            heap_add(heap, char_frequency->array[i], tmp);
+        }
     }
 }
 
 HTree *create_huffman_tree(HFile *file) {
     HTree *tmp = malloc(sizeof *tmp);
-    tmp->huffman_tree = create_heap(sizeof *tmp);
+
+    Heap *tmpheap = create_heap(UNSIGNED_CHAR_CAPACITY);
+
+    fill_heap_with_char_frequency(tmpheap, file->char_frequency);
+    heap_sort(tmpheap);
 
     return tmp;
 }

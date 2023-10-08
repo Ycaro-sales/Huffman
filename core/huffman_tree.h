@@ -11,7 +11,6 @@ typedef struct Huffman_tree {
 
 typedef struct HuffNode {
     unsigned char data;
-    int frequency;
     struct HuffNode *left;
     struct HuffNode *right;
 } HuffNode;

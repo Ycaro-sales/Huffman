@@ -77,8 +77,16 @@ HeapNode *heap_pull(Heap *heap) {
     return item;
 }
 
-void heap_add(Heap *heap, HeapNode *item) {
-    heap->items[heap->size] = item;
+void heap_add(Heap *heap, int num, void *data) {
+    HeapNode *tmp = malloc(sizeof *tmp);
+
+    tmp->num = num;
+    tmp->data = data;
+
+    heap->items[heap->size] = tmp;
     heap->size++;
+
     heapify_up(heap);
 }
+
+void heap_sort(Heap *heap) {}
