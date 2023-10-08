@@ -3,7 +3,7 @@
 
 #define HEAP_SIZE 1000
 
-typedef struct heap_node {
+typedef struct HeapNode {
     int num;
     void *data;
 } HeapNode;
@@ -15,9 +15,10 @@ typedef struct heap {
 } Heap;
 
 Heap *create_heap(int capacity);
-HeapNode *heap_pull(Heap *heap);
+int *heap_pull(Heap *heap);
 
-void heap_add(Heap *heap, int num, void *data);
-void heap_sort(Heap *heap);
+void heap_enqueue(Heap *heap, int num, void *data);
+void heap_dequeue(Heap *heap);
+void heap_print(Heap *heap);
 
 #endif // !HASHTABLE_H

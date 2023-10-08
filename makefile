@@ -1,8 +1,8 @@
 build:
-	gcc main.c -o ./bin/main
+	gcc main.c ./models/min_heap.c 
 
 clean:
 	rm -rf bin
 
 run:
-	./bin/main
+	./bin/

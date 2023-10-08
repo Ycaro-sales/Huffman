@@ -43,7 +43,6 @@ HFile *create_huffman_file(char *file_name) {
     fclose(stream);
 
     // Lê os bytes do arquivo e insere na hashtable
-    read_file_bytes(tmp);
     tmp->char_frequency = read_file_bytes(tmp);
 
     return tmp;
