@@ -20,9 +20,6 @@ HFile *create_huffman_file(char *file_name) {
     HFile *tmp = malloc(sizeof *tmp);
     FILE *stream;
 
-    char *buffer;
-    int file_length;
-
     // Lê o arquivo passado nos argumentos
     stream = fopen(file_name, "rb");
 
@@ -34,10 +31,10 @@ HFile *create_huffman_file(char *file_name) {
     tmp->file_size = ftell(stream);
 
     // Aloca no buffer espaço suficiente para receber os bytes do arquivo
-    tmp->buffer = (unsigned char *)malloc(file_length * sizeof(unsigned));
+    tmp->buffer = (unsigned char *)malloc(tmp->file_size * sizeof(unsigned));
 
     // Lê o arquivo e passa os bytes para o buffer
-    fread(buffer, file_length, 1, stream);
+    fread(tmp->buffer, tmp->file_size, 1, stream);
 
     // Fecha o arquivo
     fclose(stream);

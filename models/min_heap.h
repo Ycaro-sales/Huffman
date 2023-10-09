@@ -18,7 +18,8 @@ Heap *create_heap(int capacity);
 int *heap_pull(Heap *heap);
 
 void heap_enqueue(Heap *heap, int num, void *data);
-void heap_dequeue(Heap *heap);
+HeapNode *heap_dequeue(Heap *heap);
 void heap_print(Heap *heap);
+void heap_sort(Heap *heap);
 
 #endif // !HASHTABLE_H

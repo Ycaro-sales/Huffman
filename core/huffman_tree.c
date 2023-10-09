@@ -8,31 +8,32 @@
 #define UNSIGNED_CHAR_CAPACITY 255
 
 HuffNode *create_huffman_node(unsigned char data, int frequency) {
-    HuffNode *tmp = malloc(sizeof *tmp);
+        HuffNode *tmp = malloc(sizeof *tmp);
 
-    tmp->data = data;
-    tmp->left = NULL;
-    tmp->right = NULL;
+        tmp->data = data;
+        tmp->left = NULL;
+        tmp->right = NULL;
 
-    return tmp;
+        return tmp;
 }
 
 void fill_heap_with_char_frequency(Heap *heap, Hashtable *char_frequency) {
-    for (int i = 0; i < UNSIGNED_CHAR_CAPACITY; i++) {
-        if (char_frequency->array[i] > 0) {
-            HuffNode *tmp = create_huffman_node(i, char_frequency->array[i]);
-            heap_add(heap, char_frequency->array[i], tmp);
+        for (int i = 0; i < UNSIGNED_CHAR_CAPACITY; i++) {
+                if (char_frequency->array[i] > 0) {
+                        HuffNode *tmp =
+                            create_huffman_node(i, hash_get(char_frequency, i));
+                        heap_enqueue(heap, char_frequency->array[i], tmp);
+                }
         }
-    }
 }
 
 HTree *create_huffman_tree(HFile *file) {
-    HTree *tmp = malloc(sizeof *tmp);
+        HTree *tmp = malloc(sizeof *tmp);
 
-    Heap *tmpheap = create_heap(UNSIGNED_CHAR_CAPACITY);
+        Heap *tmpheap = create_heap(UNSIGNED_CHAR_CAPACITY);
 
-    fill_heap_with_char_frequency(tmpheap, file->char_frequency);
-    heap_sort(tmpheap);
+        fill_heap_with_char_frequency(tmpheap, file->char_frequency);
+        heap_sort(tmpheap);
 
-    return tmp;
+        return tmp;
 }
