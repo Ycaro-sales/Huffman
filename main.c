@@ -1,3 +1,5 @@
+#include "core/huffman_file.h"
+#include "core/huffman_tree.h"
 #include "models/min_heap.h"
 #include "utils.h"
 #include <stdbool.h>
@@ -14,11 +16,11 @@
 //
 
 int main() {
-        Heap *heap = create_heap(255);
+        HFile *file = create_huffman_file("./files/file.txt");
 
-        heap_enqueue(heap, 24, "14");
-        heap_enqueue(heap, 23, "14");
-        heap_enqueue(heap, 25, "14");
+        HTree *huffTree = create_huffman_tree(file);
+
+        heap_print(huffTree->tree);
 
         return 0;
 }

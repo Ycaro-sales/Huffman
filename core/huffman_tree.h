@@ -5,14 +5,14 @@
 #define HUFFMANTREE_H
 
 typedef struct Huffman_tree {
-    Heap *huffman_tree;
-    int size;
+        Heap *tree;
+        int size;
 } HTree;
 
 typedef struct HuffNode {
-    unsigned char data;
-    struct HuffNode *left;
-    struct HuffNode *right;
+        unsigned char data;
+        struct HuffNode *left;
+        struct HuffNode *right;
 } HuffNode;
 
 HuffNode *create_huffman_node(unsigned char data, int frequency);

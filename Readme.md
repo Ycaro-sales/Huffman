@@ -2,7 +2,7 @@
 
 ## Data Stuctctures
 
-[] -> Min Heap
+[x] -> Min Heap
 [] -> Hashtable
 [] -> Huffman Tree
 [] -> Huffman File

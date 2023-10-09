@@ -117,7 +117,6 @@ void heap_sort(Heap *heap) {
 }
 
 void heap_print(Heap *heap) {
-        printf("heap: %d", heap->items[1]->num);
         for (int i = 0; i < heap->size; i++) {
                 printf("heap index %d: %d\n", i, heap->items[i]->num);
         }

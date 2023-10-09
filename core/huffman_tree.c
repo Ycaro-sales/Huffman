@@ -18,12 +18,18 @@ HuffNode *create_huffman_node(unsigned char data, int frequency) {
 }
 
 void fill_heap_with_char_frequency(Heap *heap, Hashtable *char_frequency) {
-        for (int i = 0; i < UNSIGNED_CHAR_CAPACITY; i++) {
-                if (char_frequency->array[i] > 0) {
+        ListNode *curr = char_frequency->used_indexes->head;
+
+        while (curr->next != NULL) {
+                int i = *((int *)(curr->data));
+
+                if (char_frequency->array[i] > 0 &&
+                    hash_get(char_frequency, i) > 0) {
                         HuffNode *tmp =
                             create_huffman_node(i, hash_get(char_frequency, i));
                         heap_enqueue(heap, char_frequency->array[i], tmp);
                 }
+                curr = curr->next;
         }
 }
 
