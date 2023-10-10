@@ -8,6 +8,9 @@
 
 Hashtable *create_hash() {
         Hashtable *tmp = malloc(sizeof *tmp);
+        for (int i = 0; i < HASH_CAPACITY; i++)
+                tmp->array[i] = 0;
+
         tmp->used_indexes = create_list();
 
         return tmp;
@@ -23,13 +26,12 @@ void hash_add(Hashtable *hashtable, unsigned char data) {
         hashtable->array[hash_function(data)]++;
 }
 
-bool hash_remove(Hashtable *hashtable, unsigned char data) {
-        if (hashtable->array[hash_function(data)] == 0) {
-                return false;
-        }
+void hash_remove(Hashtable *hashtable, unsigned char data) {
+        int index = hash_function(data);
+        int *pIndex = &index;
 
-        hashtable->array[hash_function(data)] = 0;
-        return true;
+        hashtable->array[data] = 0;
+        list_remove(hashtable->used_indexes, pIndex);
 }
 
 bool hash_search(Hashtable *hashtable, unsigned char data) {
