@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
                                "fazer:\n--Compactar(0)\n--Descompactar(1)\n\n "
                                "Opção:");
                         scanf("%u\n", &option);
+                        printf("Arquivo selectionado com sucesso!\n");
 
                         switch (option) {
                         case Compress:

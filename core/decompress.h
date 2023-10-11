@@ -1,3 +1,4 @@
+#include "../utils.h"
 #include <stdio.h>
 
 #ifndef DECOMPRESS_H
@@ -10,7 +11,7 @@ typedef struct decompressed_file {
 } DecompressedFile;
 
 typedef struct header {
-        char *stringfied_tree;
+        unsigned char *stringfied_tree;
         int stringfied_tree_size;
         int thrash;
 } Header;

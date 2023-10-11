@@ -144,6 +144,8 @@ FILE *write_bits_to_file(HFile *file, FILE *compressed_file,
  */
 void compress(char *file_name) {
 
+        printf("iniciando compressão!\n");
+        printf("criando arquivo huffman...\n");
         HFile *file = create_huffman_file(file_name);
         FILE *compressed_file;
         char compressed_file_name[10000];
@@ -160,13 +162,18 @@ void compress(char *file_name) {
                 compressed_file = fopen(strcat(file->name, ".huff"), "wb");
         }
 
+        printf("Criando arvore de huffman...\n");
         HTree *huffman_tree = create_huffman_tree(file);
+        printf("Criando Hashtable de compressão...\n");
         CompressedHash *compressed_hash = create_compressed_hash(huffman_tree);
 
+        printf("abrindo arquivo...\n");
         compressed_file = fopen(compressed_file_name, "wb");
 
+        printf("Criando cabeçalho...\n");
         compressed_file = write_header_to_file(file, compressed_file,
                                                huffman_tree, compressed_hash);
+        printf("Escrevendo Bits...\n");
         compressed_file =
             write_bits_to_file(file, compressed_file, compressed_hash);
 

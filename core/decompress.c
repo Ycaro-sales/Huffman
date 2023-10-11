@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define SLASH 92
+
 Header *get_header_from_compressed_file(HFile *file) {
         Header *header = malloc(sizeof *header);
         int tmp = 0;
@@ -42,11 +44,12 @@ unsigned char *write_decompressed_bits_to_buffer(HFile *compressed_file,
                                                  int thrash_size) {
         HuffNode *curr = huffman_tree->root;
         int current_index = 0;
+
         while (current_index < compressed_file->file_size) {
                 unsigned char c = compressed_file->buffer[current_index++];
 
                 for (int i = 0; i < 8; i++) {
-                        if (is_bit_set(c, i)) {
+                        if (is_bit_i_set(c, i)) {
                                 curr = curr->right;
                         } else {
                                 curr = curr->left;
@@ -69,7 +72,7 @@ unsigned char *write_decompressed_bits_to_buffer(HFile *compressed_file,
         return buffer;
 }
 
-HTree *create_huffman_tree_from_string(unsigned char *buffer, int i) {
+HuffNode *create_huffman_tree_from_string(unsigned char *buffer, int i) {
         unsigned char currentByte;
         HuffNode *aux;
         currentByte = buffer[i++];
@@ -102,13 +105,15 @@ void decompress(char *file_name) {
 
         Header *header = get_header_from_compressed_file(compressed_file);
 
-        htree = create_huffman_tree_from_string(header->stringfied_tree,
-                                                header->stringfied_tree_size);
+        htree->root =
+            create_huffman_tree_from_string(header->stringfied_tree, 0);
 
         FILE *decompressed_file = fopen(file_name, "w");
 
-        unsigned char *buffer = write_decompressed_bits_to_buffer(
-            compressed_file, buffer, htree, header->thrash);
+        unsigned char *buffer =
+            malloc(sizeof *buffer * compressed_file->file_size);
+        write_decompressed_bits_to_buffer(compressed_file, buffer, htree,
+                                          header->thrash);
 
         for (int i = 0; i < sizeof(buffer) - sizeof(buffer[0]); i++) {
                 fwrite(&buffer[i], sizeof(buffer[0]), 1, decompressed_file);
