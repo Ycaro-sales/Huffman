@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define UNSIGNED_CHAR_CAPACITY 255
+#define SLASH 92
 
 HuffNode *create_huffman_node(unsigned char data, int frequency) {
         HuffNode *tmp = malloc(sizeof *tmp);
@@ -16,6 +17,41 @@ HuffNode *create_huffman_node(unsigned char data, int frequency) {
         tmp->next = NULL;
         tmp->left = NULL;
         tmp->right = NULL;
+
+        return tmp;
+}
+
+// create a function thats reads a string from a pre-order tree and return a
+// huffman tree in c
+
+HTree *string_to_huffmantree(unsigned char *stringfied_tree, int size) {
+        HTree *tmp = malloc(sizeof *tmp);
+        tmp->root = create_huffman_node(stringfied_tree[0], 0);
+
+        HuffNode *curr = tmp->root;
+
+        for (int i = 1; i < size; i++) {
+                HuffNode *tmpLeft = NULL;
+                HuffNode *tmpRight = NULL;
+
+                if (stringfied_tree[i] == SLASH) {
+
+                        tmpLeft =
+                            create_huffman_node(stringfied_tree[i + 1], 0);
+                        tmpRight =
+                            create_huffman_node(stringfied_tree[i + 2], 0);
+                        hnode_insert_children(curr, tmpLeft, tmpRight);
+
+                        i += 2;
+                } else {
+                        curr->left = create_huffman_node(stringfied_tree[i], 0);
+                        curr->right =
+                            create_huffman_node(stringfied_tree[i + 1], 0);
+                        i++;
+                }
+
+                curr = curr->left;
+        }
 
         return tmp;
 }
@@ -59,6 +95,14 @@ HTree *heap_to_hufflist(Heap *heap) {
         return tmp;
 }
 
+HuffNode *hnode_insert_children(HuffNode *parent, HuffNode *left,
+                                HuffNode *right) {
+        parent->left = left;
+        parent->right = right;
+
+        return parent;
+}
+
 void htree_insert_sorted(HTree *htree, HuffNode *hnode) {
         HuffNode *curr = htree->root;
 
@@ -91,8 +135,6 @@ HuffNode *pop_htree(HTree *htree) {
 }
 
 HTree *hufflist_to_hufftree(HTree *htree) {
-        HuffNode *curr = htree->root;
-
         while (htree->root->next != NULL) {
                 HuffNode *tmpLeft = pop_htree(htree);
                 HuffNode *tmpRight = pop_htree(htree);
@@ -102,6 +144,30 @@ HTree *hufflist_to_hufftree(HTree *htree) {
         }
 
         return htree;
+}
+
+/* Função recursiva que transforma a arvore de huffman em uma stringfied_tree
+ * @param node: nó da arvore de huffman
+ * @param tree_string: string de buffer
+ * @param i: indice da stringfied_tree
+ */
+void tree_to_string(HuffNode *node, unsigned char *tree_string, int i) {
+        if (is_leaf(node) && (node->data == '*' || node->data == SLASH)) {
+                tree_string[i++] = SLASH;
+                tree_string[i++] = node->data;
+                return;
+        }
+
+        tree_string[i++] = node->data;
+        tree_to_string(node->left, tree_string, i);
+        tree_to_string(node->right, tree_string, i);
+}
+
+unsigned char *Huffman_tree_to_string(HTree *huffman_tree) {
+        unsigned char *tree_string = malloc(sizeof(unsigned char) * 256);
+        int i = 0;
+        tree_to_string(huffman_tree->root, tree_string, i);
+        return tree_string;
 }
 
 bool is_leaf(HuffNode *hnode) {
@@ -120,6 +186,10 @@ HTree *create_huffman_tree(HFile *file) {
         tmp = heap_to_hufflist(heap);
 
         tmp = hufflist_to_hufftree(tmp);
+
+        tmp->stringfied_tree = Huffman_tree_to_string(tmp);
+        tmp->stringfied_tree_size =
+            sizeof(tmp->stringfied_tree) - sizeof(unsigned char);
 
         return tmp;
 }

@@ -20,16 +20,17 @@ int main(int argc, char *argv[]) {
                         }
                 }
         } else {
-                char *input;
                 enum options option;
                 while (true) {
+                        char input[10000];
+
                         printf("Selecione o arquivo:");
                         scanf("%s\n\n", input);
 
                         printf("Selecione o que você quer "
                                "fazer:\n--Compactar(0)\n--Descompactar(1)\n\n "
                                "Opção:");
-                        scanf("%d\n", &option);
+                        scanf("%u\n", &option);
 
                         switch (option) {
                         case Compress:

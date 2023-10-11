@@ -57,33 +57,13 @@ unsigned char *write_decompressed_bits_to_buffer(HFile *compressed_file,
                                                         sizeof(curr->data));
                                 buffer[sizeof(buffer) - sizeof(curr->data)] =
                                     curr->data;
+                                current_index++;
                                 curr = huffman_tree->root;
-                                if (current_index ==
-                                    compressed_file->file_size - 1) {
-                                        return buffer;
-                                }
                         }
                 }
         }
 
         return buffer;
-}
-
-HTree *create_huffman_tree_from_string(unsigned char *buffer, int i) {
-        unsigned char currentByte;
-        HuffNode *aux;
-        currentByte = buffer[i++];
-        if (currentByte == '*') {
-                aux = create_huffman_node(currentByte, 0);
-                aux->left = create_huffman_tree_from_string(buffer, i++);
-                aux->right = create_huffman_tree_from_string(buffer, i);
-        } else if (currentByte == (char)SLASH) {
-                currentByte = buffer[i++];
-                aux = create_huffman_node(currentByte, 0);
-        } else {
-                aux = create_huffman_node(currentByte, 0);
-        }
-        return aux;
 }
 
 /* Função que descompacta um arquivo
@@ -102,8 +82,8 @@ void decompress(char *file_name) {
 
         Header *header = get_header_from_compressed_file(compressed_file);
 
-        htree = create_huffman_tree_from_string(header->stringfied_tree,
-                                                header->stringfied_tree_size);
+        htree = string_to_huffmantree(header->stringfied_tree,
+                                      header->stringfied_tree_size);
 
         FILE *decompressed_file = fopen(file_name, "w");
 

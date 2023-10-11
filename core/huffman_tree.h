@@ -14,11 +14,15 @@ typedef struct HuffNode {
 
 typedef struct Huffman_tree {
         HuffNode *root;
-        int size;
+        unsigned char *stringfied_tree;
+        int stringfied_tree_size;
 } HTree;
 
 HuffNode *create_huffman_node(unsigned char data, int frequency);
 bool is_leaf(HuffNode *hnode);
 HTree *create_huffman_tree(HFile *file);
+HuffNode *hnode_insert_children(HuffNode *parent, HuffNode *left,
+                                HuffNode *right);
+HTree *string_to_huffmantree(unsigned char *stringfied_tree, int size);
 
 #endif // !HASHTABLE_H

@@ -22,9 +22,6 @@ void hash_add(Hashtable *hashtable, unsigned char data) {
 }
 
 void hash_remove(Hashtable *hashtable, unsigned char data) {
-        int index = hash_function(data);
-        int *pIndex = &index;
-
         hashtable->array[data] = 0;
 }
 

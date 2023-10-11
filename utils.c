@@ -13,8 +13,16 @@ bool is_bit_i_set(unsigned char c, int i) {
         return mask & c;
 }
 
+char *remove_extension(char *file_name) {
+        char *dot = strrchr(file_name, '.');
+        if (!dot || dot == file_name)
+                return file_name;
+        *dot = '\0';
+        return file_name;
+}
+
 bool regex_match(char *pattern, char *expression) {
-        regex_t *regex;
+        regex_t *regex = malloc(sizeof(regex_t));
         /* compila a ER passada em argv[1]
          * em caso de erro, a função retorna diferente de zero */
         if (regcomp(regex, pattern, REG_EXTENDED | REG_NOSUB) != 0) {

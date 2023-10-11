@@ -9,6 +9,12 @@ typedef struct decompressed_file {
         FILE *decompressed_file_pointer;
 } DecompressedFile;
 
+typedef struct header {
+        char *stringfied_tree;
+        int stringfied_tree_size;
+        int thrash;
+} Header;
+
 void decompress(char *file_name);
 
 #endif // !COMPRESS_H

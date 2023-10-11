@@ -10,7 +10,11 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
-bool regex_match(char *pattern, char *expression);
 bool is_bit_set(unsigned char c, int i);
 unsigned char set_bit(unsigned char c, int i);
+
+bool regex_match(char *pattern, char *expression);
+
+char *remove_extension(char *file_name);
+
 #endif // !UTILS_H
