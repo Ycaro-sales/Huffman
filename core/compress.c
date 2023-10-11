@@ -37,34 +37,51 @@ CompressedHash *create_compressed_hash(HTree *htree) {
         return tmp;
 }
 
+// TODO
 FILE *write_thrash_to_header(FILE *compressed_file, int thrash_size) {
+        return compressed_file;
+}
+
+// TODO
+FILE *write_huffman_tree_bytes_to_header(FILE *compressed_file,
+                                         HTree *Huffman_tree) {
         return compressed_file;
 }
 
 FILE *write_header_to_file(HFile *file, FILE *compressed_file,
                            HTree *huffman_tree,
                            CompressedHash *compressed_hash) {
-        compressed_file = write_thrash_to_header(compressed_hash);
+        int thrash_size;
+        compressed_file = write_thrash_to_header(compressed_file, thrash_size);
         compressed_file =
             write_huffman_tree_bytes_to_header(compressed_file, huffman_tree);
         return compressed_file;
 }
 
+// TODO
 FILE *write_bits_to_file(unsigned char *buffer, FILE *compressed_file,
                          CompressedHash *compressed_hash) {
         int byte_count;
         return compressed_file;
 }
 
-void compress(HFile *file) {
+void compress(char *file_name) {
+
+        HFile *file = create_huffman_file(file_name);
+        char *compressed_file_name = strcat(file->name, ".huff");
+
+        FILE *compressed_file;
+
         HTree *huffman_tree = create_huffman_tree(file);
         CompressedHash *compressed_hash = create_compressed_hash(huffman_tree);
 
-        FILE *compressed_file;
-        fopen(strcat(file->name, ".huff"), "wb");
+        fopen(compressed_file_name, "wb");
 
         compressed_file = write_header_to_file(file, compressed_file,
                                                huffman_tree, compressed_hash);
         compressed_file =
             write_bits_to_file(file->buffer, compressed_file, compressed_hash);
+
+        printf("%s Compactado com Successo!!\nArquivo compactado: %s\n\n",
+               file_name, compressed_file_name);
 }

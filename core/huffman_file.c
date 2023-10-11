@@ -24,6 +24,13 @@ HFile *create_huffman_file(char *file_name) {
         // Lê o arquivo passado nos argumentos
         stream = fopen(file_name, "rb");
 
+        if (!stream) {
+                printf("Arquivo não existe!");
+                fclose(stream);
+
+                return NULL;
+        }
+
         // Busca o fim do arquivo
         fseek(stream, 0, SEEK_END);
 
