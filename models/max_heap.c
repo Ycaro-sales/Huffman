@@ -1,6 +1,7 @@
-#include "./min_heap.h"
+#include "./max_heap.h"
 #include "../utils.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -44,25 +45,25 @@ int item_of_heap(Heap *heap, int i) { return heap->items[i]->num; }
 bool is_empty(Heap *heap) { return heap->size == 0; }
 
 void max_heapify(Heap *heap, int i) {
-        int lowest;
+        int largest;
         int left_index = get_left_index(i);
         int right_index = get_right_index(i);
 
         if (left_index <= heap->size - 1 &&
-            heap->items[left_index]->num < heap->items[i]->num) {
-                lowest = left_index;
+            heap->items[left_index]->num > heap->items[i]->num) {
+                largest = left_index;
         } else {
-                lowest = i;
+                largest = i;
         }
 
         if (right_index <= heap->size - 1 &&
-            heap->items[right_index]->num < heap->items[lowest]->num) {
-                lowest = right_index;
+            heap->items[right_index]->num > heap->items[largest]->num) {
+                largest = right_index;
         }
 
-        if (heap->items[i] != heap->items[lowest]) {
-                SWAP(heap->items[i], heap->items[lowest]);
-                max_heapify(heap, lowest);
+        if (heap->items[i] != heap->items[largest]) {
+                SWAP(heap->items[i], heap->items[largest]);
+                max_heapify(heap, largest);
         }
 }
 
@@ -97,7 +98,7 @@ void heap_enqueue(Heap *heap, int num, void *data) {
                 int parent_index = get_parent_index(heap->size - 1);
 
                 while (parent_index >= 0 &&
-                       heap->items[key_index]->num <
+                       heap->items[key_index]->num >
                            heap->items[parent_index]->num) {
                         SWAP(heap->items[key_index], heap->items[parent_index]);
                         key_index = parent_index;

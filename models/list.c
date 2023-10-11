@@ -63,7 +63,7 @@ bool list_remove(List *list, void *data) {
         ListNode *tmp = NULL;
 
         do {
-                if (curr->next->data == data) {
+                if (*(int *)(curr->next->data) == *(int *)data) {
                         tmp = curr->next;
                         curr->next = curr->next->next;
                         free(tmp);

@@ -6,7 +6,6 @@
 
 typedef struct hashtable {
         int array[HASH_CAPACITY];
-        List *used_indexes;
 } Hashtable;
 
 Hashtable *create_hash();

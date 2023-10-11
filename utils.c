@@ -2,14 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void swap(void *a, void *b, size_t size) {
-    void *aux = malloc(size);
-
-    memcpy(aux, a, size);
-
-    memcpy(a, b, size);
-
-    memcpy(b, aux, size);
-
-    free(aux);
+unsigned char set_bit(unsigned char c, int i) {
+        unsigned char mask = 1 << i;
+        return mask | c;
 }

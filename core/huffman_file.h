@@ -4,9 +4,10 @@
 #define HUFFMANFILE_H
 
 typedef struct huffman_file {
-    unsigned char *buffer;
-    unsigned int file_size;
-    Hashtable *char_frequency;
+        unsigned char *buffer;
+        char *name;
+        unsigned int file_size;
+        Hashtable *char_frequency;
 } HFile;
 
 HFile *create_huffman_file(char *file_name);
