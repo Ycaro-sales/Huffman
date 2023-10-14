@@ -20,28 +20,29 @@ int main(int argc, char *argv[]) {
                         }
                 }
         } else {
-                enum options option;
-                while (true) {
-                        char input[10000];
-
-                        printf("Selecione o arquivo:");
-                        scanf("%s\n\n", input);
-
-                        printf("Selecione o que você quer "
-                               "fazer:\n--Compactar(0)\n--Descompactar(1)\n\n "
-                               "Opção:");
-                        scanf("%u\n", &option);
-                        printf("Arquivo selectionado com sucesso!\n");
-
-                        switch (option) {
-                        case Compress:
-                                compress(input);
-                        case Decompress:
-                                decompress(input);
-                        default:
-                                printf("Opção invalida. Tente novamente\n");
-                        }
-                }
+                // enum options option;
+                // while (true) {
+                //         char input[10000];
+                //
+                //         printf("Selecione o arquivo:");
+                //         scanf("%s\n\n", input);
+                //
+                //         printf("Selecione o que você quer "
+                //                "fazer:\n--Compactar(0)\n--Descompactar(1)\n\n
+                //                " "Opção:");
+                //         scanf("%u\n", &option);
+                //         printf("Arquivo selectionado com sucesso!\n");
+                //
+                //         switch (option) {
+                //         case Compress:
+                //                 compress(input);
+                //         case Decompress:
+                //                 decompress(input);
+                //         default:
+                //                 printf("Opção invalida. Tente novamente\n");
+                //         }
+                // }
+                compress("./files/file.txt");
         }
 
         return EXIT_SUCCESS;

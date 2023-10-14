@@ -157,9 +157,9 @@ void compress(char *file_name) {
                 printf("Digite o nome do arquivo compactado:\n");
                 scanf("%s", compressed_file_name);
                 compressed_file =
-                    fopen(strcat(compressed_file_name, ".huff"), "wb");
+                    fopen(strcat(compressed_file_name, ".huff"), "wb+");
         } else {
-                compressed_file = fopen(strcat(file->name, ".huff"), "wb");
+                compressed_file = fopen("file.huff", "wb+");
         }
 
         printf("Criando arvore de huffman...\n");
@@ -176,6 +176,8 @@ void compress(char *file_name) {
         printf("Escrevendo Bits...\n");
         compressed_file =
             write_bits_to_file(file, compressed_file, compressed_hash);
+
+        fclose(compressed_file);
 
         printf("%s Compactado com Successo!!\nArquivo compactado: %s\n\n",
                file_name, compressed_file_name);

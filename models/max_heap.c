@@ -10,7 +10,7 @@ Heap *create_heap(int capacity) {
         tmp->size = 0;
         tmp->capacity = capacity;
 
-        for (int i = 0; i < HEAP_SIZE; i++)
+        for (int i = 0; i < 255; i++)
                 tmp->items[i] = NULL;
 
         return tmp;
