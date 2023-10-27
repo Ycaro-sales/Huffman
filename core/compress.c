@@ -8,42 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Função que cria os caminhos de cada caracter
- * @param root: raiz da arvore de huffman
- * @return arquivo a ser compactado
- */
-void fill_compressed_hash(HuffNode *root, CompressedHash *compressed_hash,
-                          char *path) {
-        if (is_leaf(root)) {
-                compressed_hash->paths[root->data] = path;
-        } else {
-                char *tmpRight = malloc(sizeof(path) + sizeof(char));
-                char *tmpLeft = malloc(sizeof(path) + sizeof(char));
-
-                strncpy(tmpRight, path, sizeof(path) + sizeof(char));
-                strncpy(tmpLeft, path, sizeof(path) + sizeof(char));
-
-                fill_compressed_hash(root->left, compressed_hash,
-                                     strcat(tmpLeft, "0"));
-                fill_compressed_hash(root->right, compressed_hash,
-                                     strcat(tmpRight, "1"));
-        }
-}
-/* Função que cria o Hash com os caminhos de cada caracter
- * @param htree: arvore de huffman
- * @return Hash com os caminhos de cada caracter
- */
-CompressedHash *create_compressed_hash(HTree *htree) {
-        CompressedHash *tmp = malloc(sizeof *tmp);
-
-        char *path = "";
-
-        fill_compressed_hash(htree->root, tmp, path);
-        // tmp->thrash;
-
-        return tmp;
-}
-
 /* Função que escreve a arvore de huffman no cabeçalho do arquivo compactado
  * @param compressed_file: arquivo compactado
  * @param huffman_tree: arvore de huffman
@@ -63,10 +27,11 @@ FILE *write_huffman_tree_bytes_to_header(FILE *compressed_file,
  */
 int calculate_thrash_size(CompressedHash *compressed_hash, HFile *file) {
         int thrash_size = 0;
-        for (int i = 0; i < 256; i++) {
-                if (compressed_hash->paths[file->buffer[i]] > 0) {
-                        thrash_size += strlen(compressed_hash->paths[i]) *
-                                       file->char_frequency->array[i];
+        for (unsigned int i = 0; i < 256; i++) {
+                if (compressed_hash->paths[i] > 0) {
+                        int path_size = strlen(compressed_hash->paths[i]);
+                        thrash_size +=
+                            path_size * file->char_frequency->array[i];
                 }
         }
         return thrash_size % 8;
@@ -84,6 +49,7 @@ FILE *write_thrash_and_tree_size_to_header(FILE *compressed_file,
         tree_size = tree_size << 5;
         tree_size = tree_size | thrash;
 
+        printf("%d\n", compressed_file == NULL);
         fputc(tree_size, compressed_file);
 
         return compressed_file;
@@ -99,12 +65,16 @@ FILE *write_thrash_and_tree_size_to_header(FILE *compressed_file,
 FILE *write_header_to_file(HFile *file, FILE *compressed_file,
                            HTree *huffman_tree,
                            CompressedHash *compressed_hash) {
+        printf("Calculando Tamanho do lixo\n");
         int thrash_size = calculate_thrash_size(compressed_hash, file);
         unsigned char thrash = thrash_size << 5;
 
+        printf("%d\n", compressed_file == NULL);
+        printf("Escrevendo cabeçalho\n");
         compressed_file = write_thrash_and_tree_size_to_header(
             compressed_file, thrash, huffman_tree->stringfied_tree_size);
 
+        printf("Escrevendo arvore de huffman no cabeçalho\n");
         compressed_file =
             write_huffman_tree_bytes_to_header(compressed_file, huffman_tree);
 
@@ -136,6 +106,7 @@ FILE *write_bits_to_file(HFile *file, FILE *compressed_file,
                         }
                 }
         }
+
         return compressed_file;
 }
 
@@ -143,12 +114,12 @@ FILE *write_bits_to_file(HFile *file, FILE *compressed_file,
  * @param file_name: nome do arquivo a ser compactado
  */
 void compress(char *file_name) {
-
         printf("iniciando compressão!\n");
         printf("criando arquivo huffman...\n");
         HFile *file = create_huffman_file(file_name);
         FILE *compressed_file;
         char compressed_file_name[10000];
+
         printf("Deseja Escolher o nome do arquivo compactado? (s/n)\n");
         char option;
         scanf("%c", &option);
@@ -157,25 +128,29 @@ void compress(char *file_name) {
                 printf("Digite o nome do arquivo compactado:\n");
                 scanf("%s", compressed_file_name);
                 compressed_file =
-                    fopen(strcat(compressed_file_name, ".huff"), "wb+");
+                    fopen(strcat(compressed_file_name, ".huff"), "w");
         } else {
-                compressed_file = fopen("file.huff", "wb+");
+                compressed_file = fopen("file.huff", "w");
+        }
+
+        if (compressed_file == NULL) {
+                printf("algo deu errado na abertura do arquivo!\n");
+                return;
         }
 
         printf("Criando arvore de huffman...\n");
         HTree *huffman_tree = create_huffman_tree(file);
-        printf("Criando Hashtable de compressão...\n");
-        CompressedHash *compressed_hash = create_compressed_hash(huffman_tree);
 
-        printf("abrindo arquivo...\n");
-        compressed_file = fopen(compressed_file_name, "wb");
+        // printf("abrindo arquivo...\n");
+        // compressed_file = fopen(compressed_file_name, "wb");
 
+        printf("%d\n", compressed_file == NULL);
         printf("Criando cabeçalho...\n");
-        compressed_file = write_header_to_file(file, compressed_file,
-                                               huffman_tree, compressed_hash);
+        compressed_file = write_header_to_file(
+            file, compressed_file, huffman_tree, huffman_tree->compressed_hash);
         printf("Escrevendo Bits...\n");
-        compressed_file =
-            write_bits_to_file(file, compressed_file, compressed_hash);
+        compressed_file = write_bits_to_file(file, compressed_file,
+                                             huffman_tree->compressed_hash);
 
         fclose(compressed_file);
 

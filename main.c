@@ -14,9 +14,9 @@ int main(int argc, char *argv[]) {
         if (argc > 1) {
                 for (int i = 0; i < argc; ++i) {
                         if (regex_match("^.*\\.(huff)$", argv[i])) {
-                                decompress(argv[i]);
-                        } else {
                                 compress(argv[i]);
+                        } else {
+                                decompress(argv[i]);
                         }
                 }
         } else {
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
                 //                 printf("Opção invalida. Tente novamente\n");
                 //         }
                 // }
-                compress("./files/file.txt");
+                decompress("./file.huff");
         }
 
         return EXIT_SUCCESS;

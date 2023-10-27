@@ -14,11 +14,16 @@ bool is_bit_i_set(unsigned char c, int i) {
 }
 
 char *remove_extension(char *file_name) {
-        char *dot = strrchr(file_name, '.');
-        if (!dot || dot == file_name)
-                return file_name;
-        *dot = '\0';
-        return file_name;
+        char *tmp = malloc(sizeof(file_name));
+        for (int i = 0; i < strlen(file_name); i++) {
+                tmp[i] = file_name[i];
+                if (file_name[i] == '.') {
+                        tmp[i] = '\0';
+                        break;
+                }
+        }
+
+        return tmp;
 }
 
 bool regex_match(char *pattern, char *expression) {

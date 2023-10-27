@@ -101,20 +101,27 @@ void decompress(char *file_name) {
                 return;
         }
 
+        printf("Removendo .huff ...\n");
         file_name = remove_extension(file_name);
 
+        printf("Recuperando dados do header...\n");
         Header *header = get_header_from_compressed_file(compressed_file);
 
+        printf("Criando a arvore de huffman pela string\n");
         htree->root =
             create_huffman_tree_from_string(header->stringfied_tree, 0);
 
-        FILE *decompressed_file = fopen(file_name, "w");
+        printf("criando arquivo descomprimido...\n");
+        FILE *decompressed_file = fopen("descomprimido.txt", "w");
 
         unsigned char *buffer =
             malloc(sizeof *buffer * compressed_file->file_size);
+
+        printf("escrevendo bits descomprimidos no buffer...\n");
         write_decompressed_bits_to_buffer(compressed_file, buffer, htree,
                                           header->thrash);
 
+        printf("escrevendo buffer no arquivo...\n");
         for (int i = 0; i < sizeof(buffer) - sizeof(buffer[0]); i++) {
                 fwrite(&buffer[i], sizeof(buffer[0]), 1, decompressed_file);
         }

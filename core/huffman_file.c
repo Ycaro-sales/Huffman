@@ -22,7 +22,7 @@ HFile *create_huffman_file(char *file_name) {
         tmp->name = file_name;
 
         // Lê o arquivo passado nos argumentos
-        stream = fopen(file_name, "rb");
+        stream = fopen(file_name, "r");
 
         if (!stream) {
                 printf("Arquivo não existe!");

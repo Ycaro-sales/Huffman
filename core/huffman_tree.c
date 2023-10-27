@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define UNSIGNED_CHAR_CAPACITY 255
 #define SLASH 92
 
@@ -21,8 +22,42 @@ HuffNode *create_huffman_node(unsigned char data, int frequency) {
         return tmp;
 }
 
-// create a function thats reads a string from a pre-order tree and return a
-// huffman tree in c
+/* Função que cria os caminhos de cada caracter
+ * @param root: raiz da arvore de huffman
+ * @return arquivo a ser compactado
+ */
+void fill_compressed_hash(HuffNode *root, CompressedHash *compressed_hash,
+                          char *path) {
+        if (is_leaf(root)) {
+                compressed_hash->paths[root->data] = path;
+        } else {
+                char *tmpRight = malloc(sizeof(path) + sizeof(char));
+                char *tmpLeft = malloc(sizeof(path) + sizeof(char));
+
+                strncpy(tmpRight, path, sizeof(path) + sizeof(char));
+                strncpy(tmpLeft, path, sizeof(path) + sizeof(char));
+
+                fill_compressed_hash(root->left, compressed_hash,
+                                     strcat(tmpLeft, "0"));
+                fill_compressed_hash(root->right, compressed_hash,
+                                     strcat(tmpRight, "1"));
+        }
+}
+
+/* Função que cria o Hash com os caminhos de cada caracter
+ * @param htree: arvore de huffman
+ * @return Hash com os caminhos de cada caracter
+ */
+CompressedHash *create_compressed_hash(HTree *htree) {
+        CompressedHash *tmp = malloc(sizeof *tmp);
+
+        char *path = "";
+
+        fill_compressed_hash(htree->root, tmp, path);
+        // tmp->thrash;
+
+        return tmp;
+}
 
 HTree *string_to_huffmantree(unsigned char *stringfied_tree, int size) {
         HTree *tmp = malloc(sizeof *tmp);
@@ -105,24 +140,20 @@ HuffNode *hnode_insert_children(HuffNode *parent, HuffNode *left,
 
 void htree_insert_sorted(HTree *htree, HuffNode *hnode) {
         HuffNode *curr = htree->root;
+        HuffNode *prev = NULL;
 
-        if (hnode->frequency < htree->root->frequency) {
-                hnode->next = htree->root;
-                htree->root = hnode;
-                return;
-        }
-
-        while (curr->next->next) {
-                if (hnode->frequency <= curr->next->next->frequency) {
-                        hnode->next = curr->next;
-                        curr->next = hnode;
-                        return;
-                }
-
+        while (curr != NULL && curr->frequency < hnode->frequency) {
+                prev = curr;
                 curr = curr->next;
         }
 
-        curr->next = hnode;
+        if (prev == NULL) {
+                hnode->next = htree->root;
+                htree->root = hnode;
+        } else {
+                prev->next = hnode;
+                hnode->next = curr;
+        }
 }
 
 HuffNode *pop_htree(HTree *htree) {
@@ -152,8 +183,13 @@ HTree *hufflist_to_hufftree(HTree *htree) {
  * @param i: indice da stringfied_tree
  */
 void tree_to_string(HuffNode *node, unsigned char *tree_string, int i) {
-        if (is_leaf(node) && (node->data == '*' || node->data == SLASH)) {
+        if (is_leaf(node) && (node->data == SLASH)) {
                 tree_string[i++] = SLASH;
+                tree_string[i++] = node->data;
+                return;
+        }
+
+        if (is_leaf(node)) {
                 tree_string[i++] = node->data;
                 return;
         }
@@ -161,6 +197,16 @@ void tree_to_string(HuffNode *node, unsigned char *tree_string, int i) {
         tree_string[i++] = node->data;
         tree_to_string(node->left, tree_string, i);
         tree_to_string(node->right, tree_string, i);
+}
+
+// print binary tree pree order
+void print_pre_order(HuffNode *node) {
+        if (node == NULL)
+                return;
+
+        printf("%c ", node->data);
+        print_pre_order(node->left);
+        print_pre_order(node->right);
 }
 
 unsigned char *Huffman_tree_to_string(HTree *huffman_tree) {
@@ -171,6 +217,8 @@ unsigned char *Huffman_tree_to_string(HTree *huffman_tree) {
 }
 
 bool is_leaf(HuffNode *hnode) {
+        if (hnode == NULL)
+                return false;
         return (hnode->left == NULL && hnode->right == NULL);
 }
 
@@ -190,6 +238,9 @@ HTree *create_huffman_tree(HFile *file) {
         tmp->stringfied_tree = Huffman_tree_to_string(tmp);
         tmp->stringfied_tree_size =
             sizeof(tmp->stringfied_tree) - sizeof(unsigned char);
+
+        printf("Criando Hashtable de compressão...\n");
+        tmp->compressed_hash = create_compressed_hash(tmp);
 
         return tmp;
 }
